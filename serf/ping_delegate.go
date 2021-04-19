@@ -36,7 +36,7 @@ func (p *pingDelegate) AckPayload() []byte {
 	// The rest of the message is the serialized coordinate.
 	enc := codec.NewEncoder(&buf, &codec.MsgpackHandle{})
 	if err := enc.Encode(p.serf.coordClient.GetCoordinate()); err != nil {
-		p.serf.logger.Printf("[ERR] serf: Failed to encode coordinate: %v\n", err)
+		p.serf.logger.Errorf("Failed to encode coordinate: %v\n", err)
 	}
 	return buf.Bytes()
 }
@@ -51,7 +51,7 @@ func (p *pingDelegate) NotifyPingComplete(other *memberlist.Node, rtt time.Durat
 	// Verify ping version in the header.
 	version := payload[0]
 	if version != PingVersion {
-		p.serf.logger.Printf("[ERR] serf: Unsupported ping version: %v", version)
+		p.serf.logger.Errorf("Unsupported ping version: %v", version)
 		return
 	}
 
@@ -60,7 +60,7 @@ func (p *pingDelegate) NotifyPingComplete(other *memberlist.Node, rtt time.Durat
 	dec := codec.NewDecoder(r, &codec.MsgpackHandle{})
 	var coord coordinate.Coordinate
 	if err := dec.Decode(&coord); err != nil {
-		p.serf.logger.Printf("[ERR] serf: Failed to decode coordinate from ping: %v", err)
+		p.serf.logger.Errorf("Failed to decode coordinate from ping: %v", err)
 		return
 	}
 
@@ -69,7 +69,7 @@ func (p *pingDelegate) NotifyPingComplete(other *memberlist.Node, rtt time.Durat
 	after, err := p.serf.coordClient.Update(other.Name, &coord, rtt)
 	if err != nil {
 		metrics.IncrCounter([]string{"serf", "coordinate", "rejected"}, 1)
-		p.serf.logger.Printf("[TRACE] serf: Rejected coordinate from %s: %v\n",
+		p.serf.logger.Debugf("Rejected coordinate from %s: %v\n",
 			other.Name, err)
 		return
 	}

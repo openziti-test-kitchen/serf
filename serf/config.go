@@ -1,8 +1,8 @@
 package serf
 
 import (
+	"github.com/hashicorp/serf/logger"
 	"io"
-	"log"
 	"os"
 	"time"
 
@@ -205,7 +205,7 @@ type Config struct {
 	// this for the internal logger. If Logger is not set, it will fall back to the
 	// behavior for using LogOutput. You cannot specify both LogOutput and Logger
 	// at the same time.
-	Logger *log.Logger
+	Logger logger.Logger
 
 	// SnapshotPath if provided is used to snapshot live nodes as well
 	// as lamport clock values. When Serf is started with a snapshot,

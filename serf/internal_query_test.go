@@ -1,7 +1,7 @@
 package serf
 
 import (
-	"log"
+	logger2 "github.com/hashicorp/serf/logger"
 	"os"
 	"strings"
 	"testing"
@@ -17,7 +17,7 @@ func TestInternalQueryName(t *testing.T) {
 
 func TestSerfQueries_Passthrough(t *testing.T) {
 	serf := &Serf{}
-	logger := log.New(os.Stderr, "", log.LstdFlags)
+	logger := logger2.NewLogger(os.Stderr)
 	outCh := make(chan Event, 4)
 	shutdown := make(chan struct{})
 	defer close(shutdown)
@@ -47,7 +47,7 @@ func TestSerfQueries_Passthrough(t *testing.T) {
 
 func TestSerfQueries_Ping(t *testing.T) {
 	serf := &Serf{}
-	logger := log.New(os.Stderr, "", log.LstdFlags)
+	logger := logger2.NewLogger(os.Stderr)
 	outCh := make(chan Event, 4)
 	shutdown := make(chan struct{})
 	defer close(shutdown)
@@ -69,7 +69,7 @@ func TestSerfQueries_Ping(t *testing.T) {
 
 func TestSerfQueries_Conflict_SameName(t *testing.T) {
 	serf := &Serf{config: &Config{NodeName: "foo"}}
-	logger := log.New(os.Stderr, "", log.LstdFlags)
+	logger := logger2.NewLogger(os.Stderr)
 	outCh := make(chan Event, 4)
 	shutdown := make(chan struct{})
 	defer close(shutdown)
@@ -121,7 +121,7 @@ func TestSerfQueries_estimateMaxKeysInListKeyResponseFactor(t *testing.T) {
 }
 
 func TestSerfQueries_keyListResponseWithCorrectSize(t *testing.T) {
-	s := serfQueries{logger: log.New(os.Stderr, "", log.LstdFlags)}
+	s := serfQueries{logger: logger2.NewLogger(os.Stderr)}
 	q := Query{id: 0, serf: &Serf{config: &Config{NodeName: "", QueryResponseSizeLimit: 1024}}}
 	cases := []struct {
 		resp     nodeKeyResponse

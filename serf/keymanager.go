@@ -74,7 +74,7 @@ func (k *KeyManager) streamKeyResp(resp *KeyResponse, ch <-chan NodeResponse) {
 
 		if nodeResponse.Result && len(nodeResponse.Message) > 0 {
 			resp.Messages[r.From] = nodeResponse.Message
-			k.serf.logger.Println("[WARN] serf:", nodeResponse.Message)
+			k.serf.logger.Warnf(nodeResponse.Message)
 		}
 
 		// Currently only used for key list queries, this adds keys to a counter
